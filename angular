@@ -1,0 +1,412 @@
+1. What is Component in Angular 4? How do you declare them?
+-Components are the building block of UI. Component hold template, controller, style of a module. To import component in our application we must import it from @angular/core library.
+Ex- import Component @angular/core;
+@Component({
+Selector:
+Template:
+Directives:
+Providers:
+Style:
+})
+Export class ABC{
+Constructor(){
+}
+}
+2. What are component decorators in angular? Or what are decorators in angular?
+- Component decorators are metadata that tells class how to process a class.
+Ex- @component,@ngModule,etc
+3.What are compilation in angular? What are different types of compilation available in angular?
+-Compilation in angular means compiling component into JavaScript code with the help of trans pilling (transcript to JavaScript compilation).
+Two types of compilation is there:
+-JIT(Just in time) compiler compiles our typescript and html code as application loads in browser. It take longer time to display and application becomes longer in size.
+-AOT(ahead of time) compiler compiles the code before build of an application. Before loading of application in a browser compiler checks for the error. Faster rendering, less size and detect template error before.
+
+4. What is @NgModule?
+-It is a decorator which set the process how the application will load and how the property will combine together to run the application. Every angular application has one root module i.e- AppModule. AppModule consist of @NgModule.it decide how the application will bootstrap.It tells Angular how to compile and run module code.It also organize functionality of an application.
+@NgModule({
+Imports: BrowserModule
+Bootstrap:[AppComponent]-host component or first loading file
+Deceleration:[components decleration- AppComponent]
+})
+What types of ngModule?
+-5 types of ngModules:
+1) Feature module-  purpose of organizing an application code.
+2)Routing module – it manage routes and also enables navigation from one view to another.
+3)Service module – AppModule should import service module.HttpCLient is a good example of a service. Contain service and providers.
+4)Widget module- third party ui component.
+5)Shared module- share module with different components. It is a pre use module.
+
+5. How do you bootstrap the Angular 4 application?
+ - Angular application bootstrap in main.ts file by using platformBrowserDynamic().bootstrapModule(AppModule);
+
+6. what is template reference variable?
+- Template reference variable also represented as # or ref. If we declare template reference variable we can use that variable through out template. 
+<input #name placeholder="Your name">
+{{ name.value }}
+
+We can use – {{name.value}},{{name.placeholder}}
+7. what are structural directives?
+- Structural directives are those directive which decide DOM structure.Example- NgIf,NgSwitch,NgFor. An asterisk (*) precedes the directive attribute name as in this example.
+
+
+8. What does asterisk (*) syntax means in the structural directives?
+- * means desugar into two stages:
+<div *ngIf="user">{{user.name}}</div>
+ |
+<div template="ngIf user">{{user.name}}</div>
+ |
+<ng-template [ngIf]="user">
+  <div>{{user.name}}</div>
+<ng-template>
+
+
+9. What is Component lifecycle?
+-8 life cycle methods are/:
+-ngOnChange()
+-ngOnInit()
+-ngDoCheck()
+-ngAfterContentInit()
+-ngAfterContentDoCheck()
+-ngAfterViewInit()
+-ngAfterViewChecked()
+-ngOnDestroy()
+10.  Explain the different types of bindings available in Angular?
+-Property Binding- we can only set value here but we can’t read it.                        <img [src]=”imageUrl”>. It is one way data binding.
+-Two way Binding – It is two way data binding. View-Source-View..Bind both event and property <input (ngModel)=”image”>
+-Class Binding-
+-Event Binding- <button (click)=”demo()”>Ok</button>. It is also one way data binding.
+-Style Binding
+-Attribute Binding- set the value directly to DOM. 
+<tr><
+  td [attr.colspan]="1 + 1">One-Two</td>
+</tr>
+
+11. What is Directive in Angular 4? How it differs from Components?
+-  Directive are metadata for a class. It allow to attach behavior to DOM. It direct how to process a class. @Directive decorator direct the directive how to process.
+-selectors
+-exportAs
+-inputs
+-outputs
+-providers
+-host
+-queries
+
+Components is a directive with template. It is building block of UI. We use directive whenever we have to reuse the DOM.
+12.  What are all the types of Directives?
+-There are three type of directives:
+-Structural Directives- *NgIf,*NgSwitch,*ngFor (Change the structure of DOM)
+- Attribute Directives -*NgStyle,*NgClass(Change behavior of DOM)
+-Components are directives with templates.
+
+
+
+
+13. How do components communicate with each other?
+-Components communicate using:
+@Input-pass data Parent to child 
+@Output-pass data child to Parent
+@Input() title: string;
+  @Output() onTitleChanged = new EventEmitter();
+
+@ViewChild - When we need the Parent Component to read or write the Child component's values or call methods, we should inject the Child component into the parent as a ViewChild.
+@ViewChild(AChildComponent)
+  private aChildComponent: AChildComponent;
+
+14. What is an Angular 4 Services?
+A service class must be declare with @Injectable and must be included in providers in NgModule.
+To use the service in one of the Component, we must include it in the constructor functions parameters.
+Constructor(private mySevice: Service){}
+15.  What is the difference between <code>@Inject</code> and <code>@Injectable</code>?
+-@Inject is the manual way to let angular know that parameter must be injected.
+constructor(@Inject(MyService) private _myService) {
+}
+
+@Injectable() lets Angular know that a class can be used with the dependency injector. Default way to use service.
+16. What are Pipe?
+-In Angular pipe work as a filter. It manipulate the desired output by adding its properties to elements.
+@Pipe or |
+@Pipe({  name : 'removeSpaces'
+})
+export class RemoveSpaces implements PipeTransform {  transform(value){
+  return value.replace(/ /g, '');
+  }
+}
+
+PurePipe- It is default pipe in angular. It is stateless in nature.
+ImpurePipe: It can manage data state after the transformation.
+@Pipe({
+  name: 'fetch',
+  pure: false
+})
+
+17. What is Lazy loading?
+- Lazy loading is a part which loads only when required. It increase performance of our application.
+const routes: Routes = [
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', component: HomeComponent },
+  { path: 'lazy', loadChildren: 'lazy/lazy.module#LazyModule' }
+];
+
+import { NgModule } from '@angular/core';
+
+import { LazyComponent }   from './lazy.component';
+import { routing } from './lazy.routing';
+
+@NgModule({
+  imports: [routing],
+  declarations: [LazyComponent]
+})
+export class LazyModule {}
+
+18. What is View Encapsulation?
+- View Encapsulation check whether view and style define in a same component can effect entire application or not.
+19. What is Shadow DOM in Angular 4? Does Angular uses Virtual DOM?
+-When we create component in angular ,angular keep template under shadow Root using ViewEncapsulation.Native. which is Shadow Dom. Doing this we encapsulate DOM and style. There is no VM Dom in angular.
+20. Explain Angular Routing.
+- we achieve routing using RouterModule.forRoot() :
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  { path: 'component-one', component: ComponentOne },  { path: 'component-two', component: ComponentTwo }
+];
+export const routing = RouterModule.forRoot(routes);
+
+than import routing in AppModule:
+
+import { routing } from './app.routes';
+@NgModule({
+  imports: [    BrowserModule,
+    routing
+  ],
+  declarations: [
+    AppComponent,
+    ComponentOne,
+    ComponentTwo
+  ],
+  bootstrap: [ AppComponent ]
+})
+export class AppModule {}
+
+20. How to link routes in HTML?
+- <a [routerLink]="['component-one', routeParams]"></a>
+
+<a routerLink="/component-one"></a>
+
+this.router.navigate(['/component-one']);
+
+21. How do we access the Route parameters in Angular?
+- We can access route parameters in angular using: 
+-ActivatedRoute or Observable/Streams
+The ActivatedRoute service provides us with a snapshot of the current route.
+This uses observables and when we navigate from one route other route, the Observable will pass along the new data. Angular v4+ router provides us with ParamMap which is an Observable we can use.
+22. How and when do you define a Child route?
+- if we have a product route with individual id and we want to navigate to other routes to see its overview or specification.
+export const routes: Routes = [
+  ..
+{  path: 'product-details/:id', component: ProductDetails,
+    children: [
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      { path: 'overview', component: Overview },
+      { path: 'specification', component: Specification }
+    ]
+  }
+];
+
+23. How do we change the state of our application? What is Reducers?
+- Reducers are like listeners that are listening for some actions. These reducers are the only structure that is allowed to alter the state of our application. All state changes are implemented inside of reducers.
+-export function reducer(state: number = 1, action: amount.AmountChangeAction) {
+  switch (action.type) {
+    case amount.AMOUNTCHANGE:
+      //return modified state
+    default:
+      return state;
+  }
+}
+
+
+1. Angular version -1,2,4,5,6,7,..
+2. Why do I need angular cli?
+3. Deebugging angular app – use Augury,Redux dev tools,Browser dev tools.
+4.How can I pass data from component A to component B?
+-using Property binding- @Input parent to child
+Using Event binding -@output child to parent.
+Or using Rxjs Subject => next() parent  Rxjs subject => subscribe() using service in between. At end please try to unsubscribe after using Rxjs.
+Or by using @ViewChild
+5. Can I use Redux?
+-Redux solve problem problem of application complexity.it solve by using Redux store. Or u can use NgRx.
+
+6. How to get state of a page after refresh?
+-  it reset after refresh because it is stateless. To maintain state we can use:
+-localstorage,firebase database,cookies
+
+7.Routes doesn’t work deployment in server.
+--  use  
+8.using third party css library?
+-<link href=”” > in index.html
+Npm install libraryentry in styles[] in angular cli.json.
+npm install library  import ‘path/to/file’
+
+9. what is template input variable?
+- Template input variable means scope of a variable remain fixedto particular block only.
+<div *ngFor = let emp of Emps>
+</div>
+10. Angular 5 architecture?
+ 
+
+
+
+
+
+
+
+
+
+11.Angular router life cycle?
+Whenever the root navigation ,router navigation emits using Router.events property.
+Sequence is:
+1.NavigationSort
+2.RouteConfigLoadStart
+3. RouteConfigLoadEnd
+4.ROutesRecognized
+5.GaurdsCheckStart
+6.ChildActivationStart
+7.ActivationStart
+8.GaurdsCheckEnd
+9.ResolveStart
+10.ResolveEnd
+11.ActivationEnd
+12.ChildActivationEnd
+13.NavigationEnd
+14.NavigationCancel
+15.NavigationError
+12. How angular router modules work?
+-step-1 – Parse the url  parse into small tokens  make a URL tree(datastructure)
+/- url segments divide
+() – parentheses specify secondry routes
+: - colon specifies named router outlet
+; - semicolon specify  matrix parameter
+? – separate query string parameter
+# - fragment
+ // -multiple secondry routes
+Step-2- Redirect(2 kind of redirect)
+Local redirect- without / used url are treated as local redirect. When redirectTo not start with / it replaces with a single url segment.ex- {path:’one’,redirectTo:’two’}
+Absolute redirect- when redirectTo start with / ,replaces the entire url.
+Example- {path:’one’,redirectTo:/two}
+Step-3 –Identify the router state
+Now angular router traverse the url tree and matches the url  segments against the paths configured in the router configuration.
+It matches all the url segments until it is not matched the route ,it search for next sibling route.
+Step -4 Guard –run guard
+For authentication and authorization.
+Step-5 Resolve –run resolver
+It resolves the required data for the router state.
+Step -6 it activates the angular components to display the page.
+Step -7: manage
+It manages navigation and repeats the process when a new url is required.
+
+
+Q13. what is router outlet?
+- it is a dynamic component that the router uses to displays views based on router navigation.
+- router outlet is a routing component.An angular component with a RouterOutlet that displays views based on router navigation.
+Role of router-outlet is to mark where the router displays a view. It tells the router where to displat the routed view.
+Example- <a routerLink=”/home” routerLinkActive=”active-link”>Home</a>
+<router-outlet></router-outlet>
+14. what is wildcard Route?
+- if the router configuration is processed and there is no match,router navigation fails and an error is logged. Ex- {path:’**’,component:PageNoFound}
+15.Redirecting routes?
+Example- export const routes Routes = [{path:’home’,component: ComponentOne}]
+16. what is service in angular 5?
+-Service are injected into application using dependency  injection mechanism.
+Ng g s Myservice   import {Injectable} from ‘@angular.core’ use @Injectable
+to export service class.
+Export class yu{ some method(){return “hi” }} 
+Import the service to component.
+Include that service in providers:[] of appmodule.
+Add dependency injection in component using constructor()
+17. what is dependency injection?
+- To inject any service in our application we use in our application. It is a coding pattern in which class receive their dependency from external sources. 
+When module A in an application needs module b to run , then module b is a dependency in module A.
+In dependency injection three terms are important that are:
+-Injector – it create an instance of a dependency injection, an injector look for provider.
+-Provider-provider is a mechanism using which we register our dependency to be injected.it register our dependency injection in our component. Provider is of two ways in angular:
+At app level-  in AppModule.ts 
+@NgModule({
+providers:[Logervice],
+Bootstrap:[AppComponent]
+})
+Export class AppModule{}
+
+At component level- we can also register the dependency at component level.
+@Component({
+Selector:’app-demo’,
+templateUrl: ./compl.component.html’,
+providers:[MyService],
+styleUrl:[‘./compl.component.css’]
+})
+ and –dependency- that we are injecting in constructor.
+18. what is bootstrap?
+-to use bootstrap In our application we must have- Angular4 or above and Bootstrap 4.0.0(only css file required not Bootstrap.js nor Bootstrap.min.js)
+ Step-1 – download bootstrap.min.css in ur laptop.
+Include in src folder and include it in styles array of angular.cli.json
+Or using cli
+-npm install  bootstrap –save
+19. what is FormGroup?
+-FormGroup aggregates the values of each child in FormControl into one object.
+FormBuilder 
+
+20.What is FormControl in angular?
+- It is a class it is used to get and set values and validation of a form control such as <input> and <select> tag.
+21. Difference between [ngModel] and [(ngModel)] in binding?
+-[ngModel] – its property binding, its one way binding. its not two way binding. 
+[(ngModel)] -  its two way data binding.
+22. what is NgForm in angular?
+-ngForm is a directive that create top level FormGroup. FormGroup is only ngForm.
+<form #frm=”ngForm” (ngSubmit)=”onSubmit(frm.value)”>
+Here,#frm is a local variable in template . we can use #frm as a form group in our view. We use ngSubmit as  (ngSubmit)=”onSubmit(frm.value)” #frm is the formGroup.
+23.what is ngModelGroup Directive in angular?
+- when we have lots of formcontrol and we want to group them in a group than we use ngModelGroup. It also check validity and state of formcontrol .
+<fieldset = ngModelGroup =”name”>
+<input type=”text” name=”firstname” ngModel>
+</fieldset>
+<fieldset = ngModelGroup =”address”>
+<input type=”text” name=”street” ngModel>
+
+</fieldset>
+Binding name in one group and address in another group.
+24.what is ngModel directive in angular?
+-ngmodel collects value from formcontrol and it register in ngForm.
+<input type=”text” name=”street” ngModel>
+25. what is transpiling?
+Transpiling means converting one high level language to another high level language. Typescript to javascript. Whereas, compiling is converting high level language to machine level language.
+Upto angular 6 we use Traceur compiler for this job.
+26. why we use BrowserModule,CommonModule,FormsModule,ReactiveFormModule,RouterModule and HttpClientModule.?
+BrowserModule- imported from @angular/platform. Use to run our application on browser.
+CommonModule – import from @angular/common. And it is used when you want to use directives.-NgIf,NgFor and so on.
+FormsModule- imported from @angular/forms and used when we built template driven form.
+ReactiveFormsModule- forms module is imported from @angular/form.used when we need to make model driven forms.
+RouterModule- router module is imported from @angular/router. Used for routing,RouterLink,forRoot and forChild.
+Http CLientModule- it handle request and response in angular apps. @angular/common/http
+
+27. what are the @ngModule metadata properties?
+-@ngModule is a metadata object that tells angular how to compile and launch the application.
+-providers- to add list of dependency injection . 
+Decleration- list of declarable classes,components,directives, and pipes that belongs to module.
+Bootstrap- launch root component ,bootstrapped view to loaded first.
+Import- formsModule,RouterModule,CommonModule to add modules. 
+Export- list of declarable components,directives,pipes and modules can be used within template of any component.
+entryComponents- components that we need to compile,bydefault appcomponent is entry component.
+schemas- it will allow any non-angular elements and properties.
+id-id is used to identify the modules in getModuleFactory.
+ 28. What is setValue()?
+- setvalue() directly set value in textfield. Fill data in form directly using setvalue() method in form.demerit of setValue is it required all field to be set. If you leave any field name not to set it will return an error.
+29.What is patchValue()?
+patchValue patch only mention data which user want to patch. It do not required to patch all value.
+30. what is valueChanges() and statusChanges() in formGroup?
+- it gives valuechanges of a formControl,formArray,formGroup. 
+It gives latest status of validation of FormControl,FormArray,FormGroup in form.
+31.what is formarray?
+To collect form data in an array format we can use form array.
+Example- const arr = new FormArray([new formControl(‘Ram’), new FormControl(‘Mohan’)]);
+Or we can use setValue like – arr.setvalue([‘Ram’,’Sita’])
+Console.log(arr.value);
+Console.log(arr.status);
+
