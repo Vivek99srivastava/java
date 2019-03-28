@@ -1,0 +1,327 @@
+example-1
+package awt;
+import java.awt.*; 
+import java.applet.*;
+public class MovingText extends Applet implements Runnable{
+
+	private String display; 
+	private String rdisplay; 
+	private int x, y, w,z,flag,nm; 
+	Thread t; 
+	Thread rt; 
+
+	// initializing 
+	// called when the applet is 
+	// started. 
+	public void init() 
+	{ 
+		display = "Java Multithread"; 
+		rdisplay = "Java Reverse Multithread";
+		x = 50; 
+		y = 50; 
+		w = 200;
+		z = 50;
+		flag = 1; 
+		nm =1;
+
+		// creating thread 
+		t = new Thread(this, "MyThread"); 
+		rt = new Thread(this, "MyThread1"); 
+
+		// start thread 
+		t.start(); 
+		rt.start(); 
+	} 
+
+	// update the x co-ordinate 
+	public void update() 
+	{ 
+
+		x = x + 1 * flag; 
+		if (x > 300){ 
+			flag = -1;
+		}
+		if (x < 100){ 
+			flag = 1;
+		}
+		w = w + 1 * flag;
+		if(w > 100 )
+			nm = -1;
+		if(w < 100)
+			nm = 1;
+	} 
+
+
+	// run 
+	public void run() 
+	{ 
+
+		while (true) { 
+
+			// Repainting the screen 
+			// calls the paint function 
+			repaint(); 
+
+			update(); 
+
+			try { 
+
+				// creating a pause of 1 second 
+				// so that the movement is recognizable 
+				Thread.sleep(100);
+
+			} 
+			catch (InterruptedException ie) { 
+				System.out.println(ie); 
+			} 
+		} 
+	} 
+
+	// drawString 
+	public void paint(Graphics g) 
+	{ 
+		g.drawString(display, x, y); 
+		g.drawString(rdisplay, w, z); 
+		g.setColor(Color.green);
+		g.fillOval(x, 100, 50, 50);
+		g.setColor(Color.blue);
+		g.fillOval(w, 100, 50, 50);
+	} 
+}
+
+
+example-2
+package awt;
+import java.awt.*;
+import java.applet.Applet;
+public class Move extends Applet implements Runnable
+{
+
+	Thread t;
+	int x;
+
+	public void init()
+	{
+		setBackground(Color.red);
+	}
+
+	public void start()
+	{
+		t=new Thread(this);
+		t.start();
+	}
+
+	public void stop()
+	{
+		t.stop();
+		t=null;
+	}
+
+	
+
+	public void run()
+	{
+		while(true)
+
+		{
+			for(;x<getSize().width;x+=10)
+
+			{/*if(x<getSize().width)x++;else x=0;*/
+				repaint();
+				try
+				{
+					Thread.sleep(200);
+				}
+				catch(InterruptedException ie)
+				{
+				}
+			}
+		}
+	}
+	public void paint(Graphics g)
+	{
+		g.setColor(Color.green);
+		g.fillOval(x,100,50,50);
+	}
+
+
+}
+
+example-3
+package awt;
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+
+public class DemoApp extends Applet {
+	  
+	 int N = 10; // chess board has 10 rows 10 column
+	
+    public void paint(Graphics g) 
+    { 
+        int x, y; 
+        // x= for black and y for white
+        for (int row = 0; row < N; row++) { 
+  
+            for (int col = 0; col < N; col++) { 
+ 
+                x = row * 30; 
+  
+                y = col * 30; 
+  
+                if ((row % 2 == 0) == (col % 2 == 0)) 
+                    g.setColor(Color.BLACK); 
+                else
+                    g.setColor(Color.orange); 
+  
+                g.fillRect(x, y, 30, 30); 
+            } 
+        } 
+    }    
+}
+
+example-4
+package awt;
+
+import java.awt.*; 
+import java.applet.*; 
+  
+public class DemoOlympic extends Applet { 
+    public void paint(Graphics g) 
+    { 
+        g.setColor(Color.BLUE); 
+        g.drawOval(30, 30, 50, 50); //x,y,r,r
+        g.setColor(Color.YELLOW); 
+        g.drawOval(50, 45, 50, 50); 
+        g.setColor(Color.BLACK); 
+        g.drawOval(70, 30, 50, 50); 
+        g.setColor(Color.GREEN); 
+        g.drawOval(90, 45, 50, 50); 
+        g.setColor(Color.RED); 
+        g.drawOval(110, 30, 50, 50); 
+    } 
+} 
+
+example-5
+
+package awt;
+import java.awt.*; 
+import java.awt.event.*; 
+import java.applet.*; 
+
+public class DemoThreadBall extends Applet implements ActionListener,Runnable {
+    int d=100; 
+    Thread t; 
+    Button btnStart,btnStop,btnPause,btnResume; 
+    int i,m,j; 
+    TextField txtSpeed; 
+    Label lblSpeed; 
+    public void init() 
+       { 
+           lblSpeed=new Label("Enter speed in ms"); 
+           txtSpeed=new TextField(5); 
+           btnStart=new Button("Start"); 
+           btnStop=new Button("Stop"); 
+           btnPause=new Button("Pause"); 
+           btnResume=new Button("Resume"); 
+           btnStart.addActionListener(this); 
+           btnStop.addActionListener(this); 
+           btnPause.addActionListener(this); 
+           btnResume.addActionListener(this); 
+           add(lblSpeed); 
+           add(txtSpeed); 
+           add(btnStart); 
+           add(btnStop); 
+           add(btnPause); 
+           add(btnResume); 
+       } 
+          public void actionPerformed(ActionEvent ae) 
+            { 
+                 if((ae.getSource()==btnStart)&&(t==null)) 
+                  { 
+                       t = new Thread(this); 
+                       t.start(); 
+                   } 
+                  else if((ae.getSource()==btnStop)&&(t != null)) 
+                   { 
+                       t.stop(); 
+                       t=null; 
+                   } 
+                 else if((ae.getSource()==btnPause)&&(t != null)) 
+                   { 
+                      t.suspend(); 
+                   } 
+                else if((ae.getSource()==btnResume)&&(t != null)) 
+                   { 
+                        t.resume(); 
+                    } 
+             } 
+                 public void run() 
+                   { 
+                       m=((int)(Math.random()*1000))%700; 
+                       for(j=500;;j--) 
+                           { 
+                              if(j<-1000) 
+                                { 
+                                   m=((int)(Math.random()*1000))%700; 
+                                    j=500; 
+                                } 
+                              repaint(); 
+                              try 
+                                { 
+                                    Thread.sleep(Integer.parseInt(txtSpeed.getText())); 
+                                } 
+                                    catch(Exception e){} 
+                            } 
+                     } 
+         public void paint(Graphics g) 
+      { 
+            for(int k=0,i=d;i>0;i--,k++) 
+                  { 
+                       g.setColor(new Color(100+k,100,100+k)); 
+                       g.drawOval((m+200)%700+k/2,k/2+j,i,i); 
+                   } 
+                      for(int k=0,i=d;i>0;i--,k++) 
+                         { 
+                               g.setColor(new Color(100+k,200,80+k)); 
+                               g.drawOval(k/2+(m%700),k/2+j,i,i); 
+                          } 
+                     for(int k=0,i=d;i>0;i--,k++) 
+                        { 
+                               g.setColor(new Color(10+k,40,90+k)); 
+                               g.drawOval(k/2+(m+500)%700,k/2+j,i,i); 
+                        } 
+         }
+}
+
+
+example-6
+
+package awt;
+
+import java.applet.Applet;  
+import java.awt.*;  
+  
+public class GraphicsDemo extends Applet{  
+  
+public void paint(Graphics g){  
+g.setColor(Color.red);  
+g.drawString("Welcome",50, 50);  
+g.drawLine(20,30,20,300);  
+g.drawRect(70,100,30,30);  
+g.fillRect(170,100,30,30);  
+g.drawOval(70,200,30,30);  
+  
+g.setColor(Color.pink);  
+g.fillOval(170,200,30,30);  
+g.drawArc(90,150,30,30,30,270);  
+g.fillArc(270,150,30,30,0,180);  
+  
+}  
+}
+
+
+example-7
