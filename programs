@@ -1,0 +1,249 @@
+example-1
+
+package thread;
+import java.awt.*;
+import javax.swing.*;
+
+import java.lang.*;
+ 
+public class BouncingBall extends JApplet
+{
+Thread t,t1;
+int i;
+int x=0,y=0;
+int w=100,z=400;
+ 
+public void init()
+{
+t=new Thread();
+t1=new Thread();
+}
+public void paint(Graphics g)
+{
+for(i=1;i<=5;i++)
+{
+g.fillOval(x,y,40,40);
+//g.setColor(Color.red);
+x=x+30;
+y=y+30;
+repaint();
+ 
+try
+{
+t.sleep(1000);
+}
+catch(Exception e)
+{}
+
+}
+g.fillOval(w,z,40,40);
+//g.setColor(Color.red);
+x=x+30;
+y=y+30;
+repaint();
+}
+ 
+ 
+}
+
+
+example-2
+package thread;
+import java.awt.*;
+import java.applet.Applet;
+
+public class Demo1 extends Thread {
+	 
+	Thread t1 = new Thread(){
+		public void run(){
+			for(int i=0;i<10;i++){
+				try {
+					Thread.sleep(900);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.println("Count A:"+i);
+			}
+		}
+	};
+	
+	
+	
+	Thread t2 = new Thread(){
+		public void run(){
+			for(int i=0;i<10;i++){
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.println("Count B:"+i);
+			}
+		}
+	};
+	
+	void runt(){
+		t1.start();
+		
+	}
+
+	void runt2(){
+		
+		t2.start();
+	}
+	
+	
+
+	public static void main(String[] args) {
+		Demo1 dd = new Demo1();
+		dd.runt();
+		dd.runt2();
+		
+		// TODO Auto-generated method stub
+
+	}
+
+	
+
+	
+
+}
+example-3
+package thread;
+
+import javax.swing.*;
+import java.awt.*;
+import java.applet.AudioClip;
+ 
+ public class Test2Thread extends JApplet implements Runnable
+{
+ 
+   private Thread anim, anim2, music;
+   private int  appWidth, xCoorImage, xCoorString, yCoor;
+   Image currentImage;
+   private String title;
+   private AudioClip sound;
+ 
+    public void init()
+   {
+      setBackground(Color.WHITE);
+      
+      title = "Computers";
+      sound = getAudioClip(getCodeBase(), "tune.au");
+   }
+  
+    public void start()
+   {
+      currentImage = getImage(getCodeBase(), "air.gif");
+      appWidth = getWidth();
+      yCoor = getHeight() / 2;
+      Runnable Job = new Move(this, appWidth);
+      Runnable Job2 = new Move2(this, appWidth);
+      anim = new Thread(Job);
+      anim2 = new Thread(Job2);
+      music = new Thread(this);
+      anim.start();
+      anim2.start(); 
+      music.start();   
+   }
+      
+     public void stop()
+     {
+         sound.stop();
+     }
+  
+  
+    public void paint(Graphics g)
+   {
+      g.setFont(new Font("TimesRoman", Font.BOLD, 30));
+      g.setColor(Color.BLUE);
+      g.clearRect(0, 0, appWidth, getHeight());
+      g.drawImage(currentImage, xCoorImage, yCoor /2, this); 
+      g.drawString(title, xCoorString, yCoor); 
+      }
+       
+      public void run()
+      {
+          sound.loop();
+      }
+  
+    public void setImageX(int x)
+   {
+      xCoorImage = x;
+   }
+      
+     public void setStringX(int x)
+     {
+        xCoorString = x;
+     }
+    
+  
+}
+  
+ class Move implements Runnable
+{
+   Test2Thread parent;
+   int appWidth;
+ 
+    public Move (Test2Thread parent, int appWidth) 
+   {
+      this.parent = parent;
+      this.appWidth = appWidth;
+   }
+ 
+    public void run()
+   {
+      while (true)
+      {
+         for (int i = 0; i < appWidth; i+=15)
+         {
+            parent.setImageX(i); 
+              
+            parent.repaint();
+          
+            try
+            {
+               Thread.sleep(100);
+            }
+                catch (InterruptedException e)
+               {
+               }
+         }
+      }
+   }
+}
+  
+   class Move2 implements Runnable
+{
+   Test2Thread parent;
+   int appWidth;
+ 
+    public Move2 (Test2Thread parent, int appWidth) 
+   {
+      this.parent = parent;
+      this.appWidth = appWidth;
+   }
+ 
+    public void run()
+   {
+      while (true)
+      {
+         for (int i = appWidth; i > 0 - appWidth; i-= 15)
+         {
+            parent.setStringX(i);
+              
+            parent.repaint();
+          
+            try
+            {
+               Thread.sleep(100);
+            }
+                catch (InterruptedException e)
+               {
+               }
+         }
+      }
+   }
+}
